@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Promesa 🛒</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:#FDF6EC;color:#2C1A0E;min-height:100vh}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:#E8D5B7}::-webkit-scrollbar-thumb{background:#E67E22;border-radius:3px}
+.hero{background:linear-gradient(135deg,#C0392B 0%,#922B21 60%,#5D1A10 100%);padding:28px 24px 22px;position:relative;overflow:hidden}
+.hero-badge{display:inline-block;background:#F39C12;color:#922B21;font-size:0.7rem;font-weight:800;padding:3px 10px;border-radius:20px;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+.hero-title{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:800;color:#fff;line-height:1.1}
+.hero-sub{color:rgba(255,255,255,0.82);font-size:0.9rem;margin-top:6px}
+.tab-bar{display:flex;background:#fff;border-bottom:2px solid #E8D5B7;position:sticky;top:0;z-index:50}
+.tab{flex:1;padding:14px;text-align:center;font-weight:700;font-size:0.85rem;cursor:pointer;color:#7D5A3C;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s}
+.tab.active{color:#C0392B;border-bottom-color:#C0392B}
+.tab:hover:not(.active){background:#FEF3E2}
+.container{max-width:900px;margin:0 auto;padding:16px 12px 100px}
+.cat-pills{display:flex;gap:8px;padding:10px 0;overflow-x:auto;flex-wrap:nowrap;scrollbar-width:thin}
+.cat-pill{padding:6px 14px;border-radius:20px;font-weight:700;font-size:0.75rem;cursor:pointer;white-space:nowrap;border:1.5px solid #E8D5B7;background:#fff;color:#7D5A3C;transition:all .15s;flex-shrink:0}
+.cat-pill.active{background:#C0392B;color:#fff;border-color:#C0392B}
+.product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;padding:4px 0}
+.prod-card{background:#fff;border:1.5px solid #E8D5B7;border-radius:14px;padding:12px 10px;text-align:center;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+.prod-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(192,57,43,0.15);border-color:#E67E22}
+.prod-emoji{font-size:2rem;display:block;margin-bottom:5px}
+.prod-name{font-weight:800;font-size:0.78rem;color:#2C1A0E;margin-bottom:3px;line-height:1.3}
+.prod-price{color:#C0392B;font-weight:800;font-size:0.9rem}
+.prod-unit{color:#7D5A3C;font-size:0.68rem}
+.prod-stock{font-size:0.68rem;margin-top:3px}
+.stock-ok{color:#27AE60}.stock-low{color:#E67E22}.stock-out{color:#C0392B}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 16px;border-radius:10px;font-family:'Nunito',sans-serif;font-weight:700;font-size:0.82rem;cursor:pointer;border:none;transition:all .18s}
+.btn-primary{background:#C0392B;color:#fff}.btn-primary:hover{background:#922B21}
+.btn-green{background:#27AE60;color:#fff}.btn-green:hover{background:#1E8449}
+.btn-ghost{background:transparent;color:#7D5A3C;border:1.5px solid #E8D5B7}.btn-ghost:hover{background:#FEF3E2}
+.btn-danger{background:#E74C3C;color:#fff}.btn-danger:hover{background:#C0392B}
+.btn-accent{background:#E67E22;color:#fff}.btn-accent:hover{background:#D35400}
+.btn-sm{padding:5px 10px;font-size:0.75rem}
+.btn-full{width:100%}
+.input{width:100%;padding:10px 14px;border:1.5px solid #E8D5B7;border-radius:10px;font-family:'Nunito',sans-serif;font-size:0.88rem;background:#FDF6EC;color:#2C1A0E;outline:none;transition:border .18s}
+.input:focus{border-color:#E67E22;background:#fff}
+.select{width:100%;padding:10px 14px;border:1.5px solid #E8D5B7;border-radius:10px;font-family:'Nunito',sans-serif;font-size:0.88rem;background:#FDF6EC;color:#2C1A0E;outline:none;cursor:pointer}
+.label{font-size:0.78rem;font-weight:700;color:#7D5A3C;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.5px;display:block}
+.form-group{margin-bottom:14px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.qty-ctrl{display:flex;align-items:center;gap:6px;justify-content:center}
+.qty-btn{width:26px;height:26px;border-radius:7px;border:1.5px solid #E8D5B7;background:#fff;cursor:pointer;font-size:1rem;font-weight:700;display:flex;align-items:center;justify-content:center;color:#C0392B;transition:all .15s}
+.qty-btn:hover{background:#C0392B;color:#fff;border-color:#C0392B}
+.qty-val{font-weight:800;font-size:0.9rem;min-width:20px;text-align:center}
+.cart-bar{position:fixed;bottom:0;left:0;right:0;background:#C0392B;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 -4px 20px rgba(0,0,0,0.2);z-index:100;cursor:pointer}
+.cart-count{background:#fff;color:#C0392B;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:800;margin-right:8px}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:flex-end;justify-content:center;z-index:200;padding:0}
+.modal{background:#fff;border-radius:20px 20px 0 0;width:100%;max-width:500px;max-height:88vh;overflow-y:auto;box-shadow:0 -10px 40px rgba(0,0,0,0.3)}
+.modal-header{padding:18px 20px 14px;background:linear-gradient(135deg,#C0392B,#922B21);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
+.modal-title{font-family:'Playfair Display',serif;font-size:1.2rem;color:#fff;font-weight:700}
+.modal-close{background:rgba(255,255,255,0.2);border:none;color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center}
+.modal-body{padding:18px 20px}
+.order-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid #E8D5B7}
+.order-row:last-child{border-bottom:none}
+.divider{height:1px;background:#E8D5B7;margin:10px 0}
+.card{background:#fff;border-radius:14px;border:1.5px solid #E8D5B7;box-shadow:0 2px 10px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:12px}
+.card-body{padding:14px 16px}
+.order-chip{display:inline-block;padding:3px 10px;border-radius:20px;font-size:0.72rem;font-weight:700}
+.chip-pending{background:#FEF9C3;color:#92400E}.chip-ready{background:#D1FAE5;color:#065F46}.chip-done{background:#E5E7EB;color:#374151}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+.stat{text-align:center;padding:14px 8px;border-right:1px solid #E8D5B7}
+.stat:last-child{border-right:none}
+.stat-val{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:700;color:#C0392B}
+.stat-lbl{font-size:0.68rem;font-weight:700;color:#7D5A3C;text-transform:uppercase;letter-spacing:0.5px}
+.alert{padding:10px 14px;border-radius:10px;font-size:0.82rem;font-weight:600;margin-bottom:12px}
+.alert-error{background:#FEE2E2;color:#991B1B}
+.login-wrap{min-height:80vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#C0392B 0%,#922B21 50%,#3D0A03 100%);padding:20px;margin:-16px -12px}
+.login-card{background:#fff;border-radius:24px;padding:36px 28px;width:100%;max-width:340px;text-align:center}
+.empty{text-align:center;padding:40px 20px;color:#7D5A3C}
+.empty-icon{font-size:3rem;margin-bottom:12px}
+.search-wrap{position:relative;margin:10px 0}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);pointer-events:none;font-size:0.9rem}
+.search-in{padding-left:34px !important}
+.results-count{font-size:0.75rem;color:#7D5A3C;padding:2px 0 6px;font-weight:600}
+.emoji-grid{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.emoji-opt{width:34px;height:34px;border-radius:7px;border:1.5px solid #E8D5B7;background:#FDF6EC;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.emoji-opt.sel{background:#C0392B;border-color:#C0392B}
+.tag{background:#FEF3E2;color:#A0522D;border-radius:8px;padding:2px 8px;font-size:0.68rem;font-weight:700;white-space:nowrap}
+.flex{display:flex}.aic{align-items:center}.jb{justify-content:space-between}.g8{gap:8px}
+.bold{font-weight:800}.tp{color:#C0392B}.ts{color:#7D5A3C}.tsm{font-size:0.82rem}.tlg{font-size:1.05rem}
+.summary-box{background:#FEF3E2;border-radius:12px;padding:12px 14px;margin-bottom:14px}
+.pass-wrap{position:relative}
+.pass-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#7D5A3C;font-size:1rem;padding:0;line-height:1}
+@media(max-width:480px){
+  .hero-title{font-size:1.8rem}
+  .form-row{grid-template-columns:1fr}
+  .product-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}
+  .tab{font-size:0.75rem;padding:12px 4px}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+const PRODUCTS_KEY = "lapromesa-products";
+const ORDERS_KEY = "lapromesa-orders";
+const OWNER_HASH = "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3";
+
+async function hashPass(str){
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+
+function loadData(key){try{const v=localStorage.getItem(key);return v?JSON.parse(v):null;}catch{return null;}}
+function saveData(key,val){try{localStorage.setItem(key,JSON.stringify(val));}catch{}}
+
+const SEED_PRODUCTS = [
+  {id:1,name:"Coca Cola Retornable 2.5L",category:"Refrescos",price:45,stock:20,unit:"pza",img:"🥤"},
+  {id:2,name:"Coca Cola Desechable 3L",category:"Refrescos",price:50,stock:15,unit:"pza",img:"🥤"},
+  {id:3,name:"Coca Cola 600ml",category:"Refrescos",price:25,stock:30,unit:"pza",img:"🥤"},
+  {id:4,name:"Pepsi 3L",category:"Refrescos",price:50,stock:15,unit:"pza",img:"🥤"},
+  {id:5,name:"Valle Frut 3L",category:"Refrescos",price:46,stock:20,unit:"pza",img:"🧃"},
+  {id:6,name:"Valle Frut 600ml",category:"Refrescos",price:20,stock:25,unit:"pza",img:"🧃"},
+  {id:7,name:"Peñafiel Manzana 2L",category:"Refrescos",price:39,stock:20,unit:"pza",img:"🍎"},
+  {id:8,name:"Peñafiel Mangada 2L",category:"Refrescos",price:39,stock:20,unit:"pza",img:"🥭"},
+  {id:9,name:"Peñafiel Toronja 2L",category:"Refrescos",price:39,stock:20,unit:"pza",img:"🍊"},
+  {id:10,name:"Peñafiel Agua Mineral 2L",category:"Refrescos",price:32,stock:25,unit:"pza",img:"💧"},
+  {id:11,name:"Peñafiel Agua Mineral 600ml",category:"Refrescos",price:20,stock:30,unit:"pza",img:"💧"},
+  {id:12,name:"Squirt 3L",category:"Refrescos",price:50,stock:15,unit:"pza",img:"🥤"},
+  {id:13,name:"Squirt 600ml",category:"Refrescos",price:21,stock:25,unit:"pza",img:"🥤"},
+  {id:14,name:"Orange Crush 2L",category:"Refrescos",price:39,stock:20,unit:"pza",img:"🍊"},
+  {id:15,name:"Boing Varios Sabores 500ml",category:"Refrescos",price:20,stock:30,unit:"pza",img:"🧃"},
+  {id:16,name:"Fanta Taquera Fresa 600ml",category:"Refrescos",price:25,stock:20,unit:"pza",img:"🍓"},
+  {id:17,name:"Frijol Negro Bolsa 220g",category:"La Costeña",price:12,stock:40,unit:"pza",img:"🫘"},
+  {id:18,name:"Frijol Negro Bolsa 400g",category:"La Costeña",price:18,stock:35,unit:"pza",img:"🫘"},
+  {id:19,name:"Salsa Guacamole 250g",category:"La Costeña",price:28,stock:20,unit:"pza",img:"🥑"},
+  {id:20,name:"Salsa Mexicana 250g",category:"La Costeña",price:27,stock:20,unit:"pza",img:"🌶️"},
+  {id:21,name:"Chipotles Adobados Lata 105g",category:"La Costeña",price:17.5,stock:25,unit:"pza",img:"🌶️"},
+  {id:22,name:"Chipotles Adobados Lata 220g",category:"La Costeña",price:34,stock:20,unit:"pza",img:"🌶️"},
+  {id:23,name:"Mayonesa Frasco 190g",category:"La Costeña",price:31,stock:15,unit:"pza",img:"🫙"},
+  {id:24,name:"Leche Condensada 380g",category:"La Costeña",price:26.5,stock:20,unit:"pza",img:"🥛"},
+  {id:25,name:"Frijol Negro Lata 440g",category:"La Costeña",price:16.5,stock:25,unit:"pza",img:"🫘"},
+  {id:26,name:"Elote 220g",category:"La Costeña",price:14.5,stock:25,unit:"pza",img:"🌽"},
+  {id:27,name:"Jalapeño Picado 220g",category:"La Costeña",price:20,stock:20,unit:"pza",img:"🌶️"},
+  {id:28,name:"Huevo Crío Reja",category:"Abarrotes",price:56,stock:30,unit:"reja",img:"🥚"},
+  {id:29,name:"Huevo Crío Pieza",category:"Abarrotes",price:2,stock:100,unit:"pza",img:"🥚"},
+  {id:30,name:"Azúcar 1kg",category:"Abarrotes",price:21,stock:40,unit:"kg",img:"🍬"},
+  {id:31,name:"Azúcar 2kg",category:"Abarrotes",price:42,stock:30,unit:"pza",img:"🍬"},
+  {id:32,name:"Jamaica Chica",category:"Abarrotes",price:10,stock:30,unit:"pza",img:"🌺"},
+  {id:33,name:"Atún Dolores 130g",category:"Abarrotes",price:15,stock:30,unit:"pza",img:"🐟"},
+  {id:34,name:"Café Único Sobre",category:"Abarrotes",price:15,stock:30,unit:"sobre",img:"☕"},
+  {id:35,name:"Arroz Italriso 250g",category:"Abarrotes",price:8,stock:40,unit:"pza",img:"🌾"},
+  {id:36,name:"Maruchan",category:"Abarrotes",price:18,stock:40,unit:"pza",img:"🍜"},
+  {id:37,name:"Galleta María",category:"Abarrotes",price:17,stock:25,unit:"pza",img:"🍪"},
+  {id:38,name:"Aceite Patrona",category:"Abarrotes",price:24,stock:20,unit:"pza",img:"🫙"},
+  {id:39,name:"Pasta Espagueti",category:"Abarrotes",price:10,stock:30,unit:"pza",img:"🍝"},
+  {id:40,name:"Salsa Chile Morita 240g",category:"Abarrotes",price:24,stock:15,unit:"pza",img:"🌶️"},
+  {id:41,name:"Tostada Ondulada",category:"Abarrotes",price:37,stock:15,unit:"pza",img:"🌽"},
+  {id:42,name:"Frijol Michigan 1kg",category:"Abarrotes",price:32,stock:30,unit:"kg",img:"🫘"},
+  {id:43,name:"Leche Entera LALA 1L",category:"Lácteos",price:28,stock:30,unit:"pza",img:"🥛"},
+  {id:44,name:"Leche Deslactosada LALA 1L",category:"Lácteos",price:28,stock:25,unit:"pza",img:"🥛"},
+  {id:45,name:"Crema Ácida Entera LALA 426ml",category:"Lácteos",price:47,stock:15,unit:"pza",img:"🫙"},
+  {id:46,name:"Crema Ácida Entera LALA 200ml",category:"Lácteos",price:25,stock:20,unit:"pza",img:"🫙"},
+  {id:47,name:"Media Crema LALA 250ml",category:"Lácteos",price:24,stock:20,unit:"pza",img:"🥛"},
+  {id:48,name:"Salchicha Hotdog Nutri Deli 3kg",category:"Lácteos",price:73,stock:10,unit:"pza",img:"🌭"},
+  {id:49,name:"Jamón de Pavo Virginia LALA 200g",category:"Lácteos",price:55,stock:10,unit:"pza",img:"🥩"},
+  {id:50,name:"Queso Manchego Rebanado 200g",category:"Lácteos",price:55,stock:12,unit:"pza",img:"🧀"},
+  {id:51,name:"Queso Mozzarella Rallado FUD 200g",category:"Lácteos",price:60.6,stock:10,unit:"pza",img:"🧀"},
+  {id:52,name:"Philadelphia 180g",category:"Lácteos",price:45,stock:10,unit:"pza",img:"🧀"},
+  {id:53,name:"Philadelphia 120g",category:"Lácteos",price:30,stock:12,unit:"pza",img:"🧀"},
+  {id:54,name:"Yoghurt Fresa Yoplait 330g",category:"Lácteos",price:20,stock:20,unit:"pza",img:"🍓"},
+  {id:55,name:"Yomi Chocolate 190ml",category:"Lácteos",price:12,stock:24,unit:"pza",img:"🍫"},
+  {id:56,name:"Mantequilla 90g",category:"Lácteos",price:22,stock:20,unit:"pza",img:"🧈"},
+  {id:57,name:"Tutsi Pop",category:"Dulcería",price:5,stock:50,unit:"pza",img:"🍭"},
+  {id:58,name:"Oreo Clásica",category:"Dulcería",price:22,stock:25,unit:"pza",img:"🍪"},
+  {id:59,name:"Oreo Vainilla",category:"Dulcería",price:22,stock:25,unit:"pza",img:"🍪"},
+  {id:60,name:"Oreo Cajeta Quemada",category:"Dulcería",price:22,stock:20,unit:"pza",img:"🍪"},
+  {id:61,name:"Halls Xtra Strong",category:"Dulcería",price:10,stock:30,unit:"pza",img:"🍬"},
+  {id:62,name:"Panditas Clásicos",category:"Dulcería",price:20,stock:20,unit:"pza",img:"🐻"},
+  {id:63,name:"Panditas Enchilados",category:"Dulcería",price:20,stock:20,unit:"pza",img:"🐻"},
+  {id:64,name:"Trident Xtracare Menta",category:"Dulcería",price:11,stock:25,unit:"pza",img:"🍬"},
+  {id:65,name:"Cajeta Coronado 333g",category:"Dulcería",price:56,stock:10,unit:"pza",img:"🍯"},
+  {id:66,name:"Bubu-Lubu",category:"Dulcería",price:12,stock:25,unit:"pza",img:"🍫"},
+  {id:67,name:"Paketaxo Amarillo 255g",category:"Botanas",price:50,stock:15,unit:"pza",img:"🍟"},
+  {id:68,name:"Ruffles 185g",category:"Botanas",price:50,stock:15,unit:"pza",img:"🥔"},
+  {id:69,name:"Doritos Nachos 223g",category:"Botanas",price:50,stock:15,unit:"pza",img:"🌽"},
+  {id:70,name:"Papas Sal $20",category:"Botanas",price:20,stock:25,unit:"pza",img:"🥔"},
+  {id:71,name:"Doritos Nachos $20",category:"Botanas",price:20,stock:25,unit:"pza",img:"🌽"},
+  {id:72,name:"Cheetos Torciditos",category:"Botanas",price:20,stock:25,unit:"pza",img:"🧀"},
+  {id:73,name:"Takis Fuego",category:"Botanas",price:20,stock:25,unit:"pza",img:"🌽"},
+  {id:74,name:"Takis Original",category:"Botanas",price:20,stock:25,unit:"pza",img:"🌽"},
+  {id:75,name:"Chips Sal Barcel",category:"Botanas",price:20,stock:25,unit:"pza",img:"🥔"},
+  {id:76,name:"Chicharrón Cerdo Barcel",category:"Botanas",price:20,stock:20,unit:"pza",img:"🥓"},
+  {id:77,name:"Plátano con Sal 50g",category:"Botanas",price:19,stock:20,unit:"pza",img:"🍌"},
+  {id:78,name:"Floochis Chile y Limón 155g",category:"Botanas",price:32,stock:15,unit:"pza",img:"🍟"},
+  {id:79,name:"Pan Blanco Grande Bimbo",category:"Panadería",price:49,stock:15,unit:"pza",img:"🍞"},
+  {id:80,name:"Pan Blanco Chico Bimbo",category:"Panadería",price:26,stock:20,unit:"pza",img:"🍞"},
+  {id:81,name:"Bimbollos",category:"Panadería",price:52,stock:10,unit:"pza",img:"🫓"},
+  {id:82,name:"Bimbollos Brioche",category:"Panadería",price:64,stock:8,unit:"pza",img:"🫓"},
+  {id:83,name:"Donas Azucaradas 6p",category:"Panadería",price:22,stock:15,unit:"pza",img:"🍩"},
+  {id:84,name:"Concha Vainilla 1p",category:"Panadería",price:10,stock:25,unit:"pza",img:"🧁"},
+  {id:85,name:"Gansito 1p",category:"Panadería",price:18,stock:25,unit:"pza",img:"🍰"},
+  {id:86,name:"Pingüino 2p",category:"Panadería",price:22,stock:20,unit:"pza",img:"🍫"},
+  {id:87,name:"Nito Bimbo",category:"Panadería",price:17,stock:20,unit:"pza",img:"🍫"},
+  {id:88,name:"Mantecadas Vainilla 6p",category:"Panadería",price:30,stock:15,unit:"pza",img:"🧁"},
+  {id:89,name:"Crossantines Hershey's 5p",category:"Panadería",price:20,stock:15,unit:"pza",img:"🥐"},
+  {id:90,name:"Barritas Piña 2p",category:"Panadería",price:16,stock:20,unit:"pza",img:"🍍"},
+  {id:91,name:"Pastillas de Cloro x4",category:"Limpieza",price:40,stock:15,unit:"paq",img:"🧼"},
+  {id:92,name:"Papel de Baño 1 pieza",category:"Limpieza",price:5,stock:50,unit:"pza",img:"🧻"},
+  {id:93,name:"Papel de Baño 2 piezas",category:"Limpieza",price:10,stock:40,unit:"paq",img:"🧻"},
+  {id:94,name:"ACE 500g",category:"Limpieza",price:25,stock:20,unit:"pza",img:"🧺"},
+  {id:95,name:"Ariel 500g",category:"Limpieza",price:30,stock:15,unit:"pza",img:"🧺"},
+  {id:96,name:"Downy Tango Pasión 750ml",category:"Limpieza",price:39,stock:12,unit:"pza",img:"🧴"},
+  {id:97,name:"Oral-B Indicator Tira 4p",category:"Higiene",price:39,stock:15,unit:"pza",img:"🪥"},
+  {id:98,name:"Rastrillo Dama/Caballero",category:"Higiene",price:24,stock:20,unit:"pza",img:"🪒"},
+  {id:99,name:"Head & Shoulders 90ml",category:"Higiene",price:19,stock:15,unit:"pza",img:"🧴"},
+  {id:100,name:"Always Noche 8p",category:"Higiene",price:35,stock:12,unit:"pza",img:"🌸"},
+  {id:101,name:"Pepto Bismol",category:"Medicamentos",price:10,stock:20,unit:"pza",img:"💊"},
+  {id:102,name:"Vick VapoRub 12g",category:"Medicamentos",price:37,stock:15,unit:"pza",img:"💊"},
+  {id:103,name:"Vick Pyrena",category:"Medicamentos",price:22,stock:15,unit:"pza",img:"💊"},
+  {id:104,name:"Flanax 30mg",category:"Medicamentos",price:5.2,stock:20,unit:"pza",img:"💊"},
+];
+
+const CATS = ["Todos","Refrescos","La Costeña","Abarrotes","Botanas","Dulcería","Panadería","Lácteos","Limpieza","Higiene","Medicamentos"];
+const EMOJIS = ["🥤","🧃","💧","🫘","🥑","🌶️","🥚","🍬","🌺","🐟","🧄","☕","🌾","🍗","🫙","🍜","🍪","🧻","🍝","🥛","🧀","🥩","🍞","🍭","💊","🧹","🥔","🍟","🥫","🍩","🥐","🧁","🍰","🍫","🍓","🌽","🍌","🥜","🍍","🍇","🐻","🧴","🧺","🪥","🌸","🪒","🧈","🌿","🍿","🌭","🧼","📦"];
+
+let state = {
+  tab:"tienda",products:[],orders:[],
+  cat:"Todos",search:"",cart:{},modal:null,
+  orderInfo:{name:"",phone:"",note:""},alertMsg:"",
+  adminAuthed:false,adminPass:"",adminPassErr:"",showPassText:false,
+  adminSubTab:"inventory",showForm:false,editProd:null,
+  form:{name:"",category:"Abarrotes",price:"",stock:"",unit:"pza",img:"📦"},
+  searchInv:"",catFilter:"Todos",pedidoSearch:"",
+};
+
+// Inicializar datos desde localStorage
+state.products = loadData(PRODUCTS_KEY) || SEED_PRODUCTS;
+state.orders = loadData(ORDERS_KEY) || [];
+
+function fmt(n){return n%1===0?n:n.toFixed(2);}
+function getFiltered(){return state.products.filter(p=>(state.cat==="Todos"||p.category===state.cat)&&p.name.toLowerCase().includes(state.search.toLowerCase())&&p.stock>0);}
+function getCartItems(){return Object.entries(state.cart).filter(([,q])=>q>0).map(([id,qty])=>({...state.products.find(p=>p.id===Number(id)),qty})).filter(i=>i.id);}
+function cartTotal(items){return items.reduce((s,i)=>s+i.price*i.qty,0);}
+function cartCount(items){return items.reduce((s,i)=>s+i.qty,0);}
+
+function setQty(id,qty){
+  const p=state.products.find(x=>x.id===id);
+  state.cart={...state.cart,[id]:Math.max(0,Math.min(p?p.stock:99,qty))};
+  render();
+}
+
+function placeOrder(){
+  if(!state.orderInfo.name.trim()){state.alertMsg="Por favor ingresa tu nombre.";render();return;}
+  const ci=getCartItems();
+  const newOrder={id:Date.now(),customer:state.orderInfo.name.trim(),phone:state.orderInfo.phone.trim(),note:state.orderInfo.note.trim(),items:ci.map(i=>({id:i.id,name:i.name,qty:i.qty,price:i.price})),total:cartTotal(ci),status:"pendiente",createdAt:new Date().toLocaleString("es-MX")};
+  state.orders=[...state.orders,newOrder];
+  saveData(ORDERS_KEY,state.orders);
+  state.cart={};state.orderInfo={name:"",phone:"",note:""};state.alertMsg="";state.modal="success";
+  render();
+}
+
+function setOrderStatus(id,status){
+  state.orders=state.orders.map(o=>o.id===id?{...o,status}:o);
+  saveData(ORDERS_KEY,state.orders);render();
+}
+
+function saveProduct(){
+  const f=state.form;
+  if(!f.name.trim()||!f.price||!f.stock)return;
+  const prod={name:f.name.trim(),category:f.category,price:parseFloat(f.price),stock:parseInt(f.stock),unit:f.unit,img:f.img};
+  const updated=state.editProd?state.products.map(p=>p.id===state.editProd.id?{...prod,id:p.id}:p):[...state.products,{...prod,id:Date.now()}];
+  state.products=updated;
+  saveData(PRODUCTS_KEY,updated);
+  state.showForm=false;render();
+}
+
+function deleteProduct(id){
+  if(!confirm("¿Eliminar producto?"))return;
+  state.products=state.products.filter(p=>p.id!==id);
+  saveData(PRODUCTS_KEY,state.products);render();
+}
+
+function render(){document.getElementById("app").innerHTML=buildApp();attachEvents();}
+
+function buildApp(){
+  const hero=`<div class="hero"><div class="hero-badge">Abarrotera</div><div class="hero-title">La Promesa 🛒</div><div class="hero-sub">Tu tienda de confianza · Villahermosa, Tab.</div></div>`;
+  const tabs=`<div class="tab-bar"><div class="tab${state.tab==="tienda"?" active":""}" data-tab="tienda">🏪 Tienda</div><div class="tab${state.tab==="pedidos"?" active":""}" data-tab="pedidos">📋 Mis Pedidos</div><div class="tab${state.tab==="admin"?" active":""}" data-tab="admin">🔐 Admin</div></div>`;
+  let content=state.tab==="tienda"?buildTienda():state.tab==="pedidos"?buildMisPedidos():buildAdmin();
+  return hero+tabs+content;
+}
+
+function buildTienda(){
+  const filtered=getFiltered();
+  const ci=getCartItems();
+  const tot=cartTotal(ci);const cnt=cartCount(ci);
+  const pills=CATS.map(c=>`<div class="cat-pill${state.cat===c?" active":""}" data-cat="${c}">${c}</div>`).join("");
+  const prodCards=filtered.map(p=>{
+    const inCart=state.cart[p.id]||0;
+    const sc=p.stock>10?"stock-ok":p.stock>0?"stock-low":"stock-out";
+    const sl=p.stock>10?"✓ Disponible":p.stock>0?`Solo ${p.stock}`:"Agotado";
+    const qc=inCart?`<div class="qty-ctrl"><button class="qty-btn" data-qtyid="${p.id}" data-qtydelta="-1">−</button><span class="qty-val">${inCart}</span><button class="qty-btn" data-qtyid="${p.id}" data-qtydelta="1">+</button></div>`:`<button class="btn btn-primary btn-sm" style="width:100%" data-addid="${p.id}">Agregar</button>`;
+    return`<div class="prod-card"><span class="prod-emoji">${p.img}</span><div class="prod-name">${p.name}</div><div class="prod-price">$${fmt(p.price)} <span class="prod-unit">/${p.unit}</span></div><div class="prod-stock ${sc}">${sl}</div><div style="margin-top:6px">${qc}</div></div>`;
+  }).join("");
+  const cartBar=cnt>0?`<div class="cart-bar" id="openCart"><div style="color:#fff;font-weight:700;font-size:0.9rem"><span class="cart-count">${cnt}</span> Ver carrito</div><div style="color:#fff;font-weight:800;font-size:1rem">$${tot.toFixed(2)}</div></div>`:"";
+  let modalHtml="";
+  if(state.modal==="cart"){
+    const rows=ci.map(i=>`<div class="order-row"><div><span style="margin-right:5px">${i.img}</span><span class="bold">${i.name}</span><span class="ts tsm"> ×${i.qty} ${i.unit}</span></div><div class="flex aic g8"><span class="tp bold">$${(i.price*i.qty).toFixed(2)}</span><button class="btn btn-ghost btn-sm" data-removeid="${i.id}">✕</button></div></div>`).join("");
+    modalHtml=`<div class="overlay" id="overlay"><div class="modal"><div class="modal-header"><span class="modal-title">🛒 Tu Carrito</span><button class="modal-close" id="closeModal">✕</button></div><div class="modal-body">${rows}<div class="divider"></div><div class="flex jb bold tlg"><span>Total</span><span class="tp">$${tot.toFixed(2)}</span></div><div style="margin-top:12px"><button class="btn btn-primary btn-full" id="goConfirm">Hacer pedido →</button></div></div></div></div>`;
+  }
+  if(state.modal==="confirm"){
+    const summary=ci.map(i=>`<div class="flex jb tsm" style="margin-bottom:5px"><span>${i.img} ${i.name} ×${i.qty}</span><span class="tp bold">$${(i.price*i.qty).toFixed(2)}</span></div>`).join("");
+    const alert=state.alertMsg?`<div class="alert alert-error">${state.alertMsg}</div>`:"";
+    modalHtml=`<div class="overlay" id="overlay"><div class="modal"><div class="modal-header"><span class="modal-title">📋 Datos del Pedido</span><button class="modal-close" id="closeModal">✕</button></div><div class="modal-body">${alert}<div class="form-group"><label class="label">Tu nombre *</label><input class="input" id="oName" placeholder="Ej: María García" value="${state.orderInfo.name}"></div><div class="form-group"><label class="label">Teléfono (opcional)</label><input class="input" id="oPhone" placeholder="Ej: 993 123 4567" value="${state.orderInfo.phone}"></div><div class="form-group"><label class="label">Notas del pedido</label><input class="input" id="oNote" placeholder="Ej: Lo recojo a las 6pm" value="${state.orderInfo.note}"></div><div class="summary-box"><div class="tsm bold" style="margin-bottom:8px">Resumen</div>${summary}<div class="divider"></div><div class="flex jb bold"><span>Total</span><span class="tp">$${tot.toFixed(2)}</span></div></div><button class="btn btn-green btn-full" id="confirmOrder">✓ Confirmar Pedido</button></div></div></div>`;
+  }
+  if(state.modal==="success"){
+    modalHtml=`<div class="overlay"><div class="modal"><div class="modal-body" style="text-align:center;padding:40px 24px"><div style="font-size:4rem;margin-bottom:12px">✅</div><div style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:#C0392B;margin-bottom:8px">¡Pedido recibido!</div><div class="ts" style="margin-bottom:24px;line-height:1.6">Tu pedido ha sido registrado. Pasa a recogerlo a la tienda y paga en caja. ¡Gracias por tu preferencia!</div><button class="btn btn-primary btn-full" id="closeSuccess">Seguir comprando</button></div></div></div>`;
+  }
+  return`<div class="container"><div class="search-wrap"><span class="search-icon">🔍</span><input class="input search-in" id="searchInput" placeholder="Buscar… (Coca, Oreo, Arroz)" value="${state.search}"></div><div class="cat-pills">${pills}</div><div class="results-count">${filtered.length} producto${filtered.length!==1?"s":""}</div>${filtered.length===0?`<div class="empty"><div class="empty-icon">🔍</div>No se encontraron productos.</div>`:`<div class="product-grid">${prodCards}</div>`}${cartBar}${modalHtml}</div>`;
+}
+
+function buildMisPedidos(){
+  const search=state.pedidoSearch||"";
+  const mine=[...state.orders].reverse().filter(o=>o.customer.toLowerCase().includes(search.toLowerCase())||(o.phone||"").includes(search));
+  const cards=mine.map(o=>{
+    const sc=o.status==="pendiente"?"chip-pending":o.status==="listo"?"chip-ready":"chip-done";
+    const sl=o.status==="pendiente"?"⏳ Pendiente":o.status==="listo"?"✅ Listo":"📦 Entregado";
+    const rows=o.items.map(i=>`<div class="flex jb tsm" style="margin-bottom:5px"><span>${i.name} ×${i.qty}</span><span class="tp bold">$${(i.price*i.qty).toFixed(2)}</span></div>`).join("");
+    const note=o.note?`<div class="tsm" style="font-style:italic;color:#7D5A3C;margin-top:4px">"${o.note}"</div>`:"";
+    return`<div class="card"><div class="card-body"><div class="flex jb aic"><div><span class="bold">${o.customer}</span>${o.phone?`<span class="ts tsm"> · ${o.phone}</span>`:""}</div><span class="order-chip ${sc}">${sl}</span></div><div class="ts tsm" style="margin-at:4px">${o.createdAt}</div>${note}<div class="divider"></div>${rows}<div class="divider"></div><div class="flex jb bold"><span>Total</span><span class="tp">$${o.total.toFixed(2)}</span></div></div></div>`;
+  }).join("");
+  return`<div class="container"><div style="margin:8px 0 12px"><input class="input" id="pedidoSearch" placeholder="Busca por nombre o teléfono…" value="${search}"></div>${mine.length===0?`<div class="empty"><div class="empty-icon">📋</div>${search?"No se encontró ningún pedido.":"Aquí aparecerán tus pedidos."}</div>`:cards}</div>`;
+}
+
+function buildAdmin(){
+  if(!state.adminAuthed){
+    const pt=state.showPassText?"text":"password";
+    const ei=state.showPassText?"🙈":"👁";
+    return`<div class="container"><div class="login-wrap"><div class="login-card"><div style="font-size:3.5rem;margin-bottom:8px">🔐</div><div style="font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:800;color:#C0392B;margin-bottom:4px">Área de Admin</div><div class="ts tsm" style="margin-bottom:24px">La Promesa — Solo dueño</div>${state.adminPassErr?`<div class="alert alert-error">${state.adminPassErr}</div>`:""}<div class="form-group" style="text-align:left"><label class="label">Contraseña</label><div class="pass-wrap"><input class="input" type="${pt}" id="adminPass" placeholder="••••••••" style="padding-right:42px"><button class="pass-toggle" id="togglePass">${ei}</button></div></div><button class="btn btn-primary btn-full" id="adminLogin">Entrar</button></div></div></div>`;
+  }
+  const low=state.products.filter(p=>p.stock<=5&&p.stock>0).length;
+  const out=state.products.filter(p=>p.stock===0).length;
+  const pend=state.orders.filter(o=>o.status==="pendiente").length;
+  const stats=`<div class="card" style="margin-bottom:12px"><div class="stat-grid"><div class="stat"><div class="stat-val">${state.products.length}</div><div class="stat-lbl">Productos</div></div><div class="stat"><div class="stat-val" style="color:${pend>0?"#E67E22":"#27AE60"}">${pend}</div><div class="stat-lbl">Pendientes</div></div><div class="stat"><div class="stat-val" style="color:${low+out>0?"#C0392B":"#27AE60"}">${low+out}</div><div class="stat-lbl">Stock bajo</div></div></div></div>`;
+  const subTabs=`<div class="tab-bar" style="border-radius:12px;margin-bottom:12px;overflow:hidden;position:static"><div class="tab${state.adminSubTab==="inventory"?" active":""}" data-admin-sub="inventory">📦 Inventario</div><div class="tab${state.adminSubTab==="orders"?" active":""}" data-admin-sub="orders">📋 Pedidos</div></div>`;
+  let content="";
+  if(state.adminSubTab==="inventory"){
+    const inv=state.products.filter(p=>(state.catFilter==="Todos"||p.category===state.catFilter)&&p.name.toLowerCase().includes(state.searchInv.toLowerCase()));
+    const rows=inv.map(p=>`<div class="card" style="margin-bottom:8px"><div class="card-body flex aic g8"><span style="font-size:1.7rem">${p.img}</span><div style="flex:1;min-width:0"><div class="flex jb aic"><span class="bold tsm">${p.name}</span><span class="tag">${p.category}</span></div><div class="tsm" style="margin-top:3px;display:flex;gap:10px"><span class="tp bold">$${fmt(p.price)}/${p.unit}</span><span class="bold ${p.stock===0?"stock-out":p.stock<=5?"stock-low":"stock-ok"}">Stock: ${p.stock}</span></div></div><div style="display:flex;gap:5px;flex-shrink:0"><button class="btn btn-ghost btn-sm" data-editid="${p.id}">✏️</button><button class="btn btn-danger btn-sm" data-delid="${p.id}">🗑</button></div></div></div>`).join("");
+    const pills=CATS.map(c=>`<div class="cat-pill${state.catFilter===c?" active":""}" data-catfilter="${c}">${c}</div>`).join("");
+    content=`<div class="flex jb aic" style="margin-bottom:10px"><span class="bold">🏬 Inventario (${inv.length})</span><button class="btn btn-primary btn-sm" id="openAdd">+ Nuevo</button></div><div class="search-wrap"><span class="search-icon">🔍</span><input class="input search-in" id="invSearch" placeholder="Buscar…" value="${state.searchInv}"></div><div class="cat-pills">${pills}</div><div style="margin-top:8px">${rows}</div>`;
+  } else {
+    const ordCards=[...state.orders].reverse().map(o=>{
+      const sc=o.status==="pendiente"?"chip-pending":o.status==="listo"?"chip-ready":"chip-done";
+      const sl=o.status==="pendiente"?"⏳ Pendiente":o.status==="listo"?"✅ Listo":"📦 Entregado";
+      const rows=o.items.map(i=>`<div class="flex jb tsm" style="margin-bottom:5px"><span>${i.name} ×${i.qty}</span><span class="tp bold">$${(i.price*i.qty).toFixed(2)}</span></div>`).join("");
+      const note=o.note?`<div class="tsm" style="font-style:italic;margin-top:4px">"${o.note}"</div>`:"";
+      const btns=o.status==="pendiente"?`<button class="btn btn-green btn-sm" data-setstatus="${o.id}" data-newstatus="listo">✅ Marcar listo</button>`:o.status==="listo"?`<button class="btn btn-accent btn-sm" data-setstatus="${o.id}" data-newstatus="entregado">📦 Entregar</button>`:`<span class="ts tsm">✓ Completado</span>`;
+      return`<div class="card"><div class="card-body"><div class="flex jb aic"><div><span class="bold">${o.customer}</span>${o.phone?`<span class="ts tsm"> · ${o.phone}</span>`:""}</div><span class="order-chip ${sc}">${sl}</span></div><div class="ts tsm" style="margin-top:4px">${o.createdAt}</div>${note}<div class="divider"></div>${rows}<div class="divider"></div><div class="flex jb bold" style="margin-bottom:12px"><span>Total</span><span class="tp">$${o.total.toFixed(2)}</span></div><div>${btns}</div></div></div>`;
+    }).join("");
+    content=`<div class="bold" style="margin-bottom:12px">📋 Pedidos de clientes</div>${state.orders.length===0?`<div class="empty"><div class="empty-icon">📭</div>No hay pedidos todavía.</div>`:ordCards}`;
+  }
+  let formModal="";
+  if(state.showForm){
+    const f=state.form;
+    const emojiOpts=EMOJIS.map(e=>`<button class="emoji-opt${f.img===e?" sel":""}" data-emoji="${e}">${e}</button>`).join("");
+    const unitOpts=["pza","kg","lt","g","ml","docena","caja","bolsa","botella","paq","sobre","reja"].map(u=>`<option${f.unit===u?" selected":""}>${u}</option>`).join("");
+    const catOpts=CATS.filter(c=>c!=="Todos").map(c=>`<option${f.category===c?" selected":""}>${c}</option>`).join("");
+    formModal=`<div class="overlay" id="overlay"><div class="modal"><div class="modal-header"><span class="modal-title">${state.editProd?"✏️ Editar":"➕ Nuevo"} Producto</span><button class="modal-close" id="closeModal">✕</button></div><div class="modal-body"><div class="form-group"><label class="label">Nombre *</label><input class="input" id="fName" placeholder="Ej: Coca Cola 600ml" value="${f.name}"></div><div class="form-row"><div class="form-group"><label class="label">Precio ($) *</label><input class="input" type="number" id="fPrice" placeholder="0.00" value="${f.price}"></div><div class="form-group"><label class="label">Stock *</label><input class="input" type="number" id="fStock" placeholder="0" value="${f.stock}"></div></div><div class="form-row"><div class="form-group"><label class="label">Unidad</label><select class="select" id="fUnit">${unitOpts}</select></div><div class="form-group"><label class="label">Categoría</label><select class="select" id="fCat">${catOpts}</select></div></div><div class="form-group"><label class="label">Ícono</label><div class="emoji-grid">${emojiOpts}</div></div><button class="btn btn-primary btn-full" id="saveProd">${state.editProd?"Guardar cambios":"Agregar producto"}</button></div></div></div>`;
+  }
+  return`<div class="container">${subTabs}${stats}${content}${formModal}</div>`;
+}
+
+function attachEvents(){
+  const on=(sel,evt,fn)=>{const el=document.querySelector(sel);if(el)el.addEventListener(evt,fn);};
+  const onAll=(sel,evt,fn)=>{document.querySelectorAll(sel).forEach(el=>el.addEventListener(evt,fn));};
+  onAll(".tab[data-tab]","click",e=>{state.tab=e.target.dataset.tab;render();});
+  on("#searchInput","input",e=>{state.search=e.target.value;render();});
+  onAll(".cat-pill[data-cat]","click",e=>{state.cat=e.target.dataset.cat;render();});
+  onAll("[data-addid]","click",e=>{setQty(Number(e.target.dataset.addid),1);});
+  onAll("[data-qtyid]","click",e=>{const d=e.target.dataset;setQty(Number(d.qtyid),(state.cart[d.qtyid]||0)+Number(d.qtydelta));});
+  onAll("[data-removeid]","click",e=>{setQty(Number(e.target.dataset.removeid),0);});
+  on("#openCart","click",()=>{state.modal="cart";render();});
+  on("#closeModal","click",()=>{state.modal=null;state.showForm=false;render();});
+  on("#overlay","click",e=>{if(e.target.id==="overlay"){state.modal=null;state.showForm=false;render();}});
+  on("#goConfirm","click",()=>{state.modal="confirm";render();});
+  on("#oName","input",e=>{state.orderInfo.name=e.target.value;});
+  on("#oPhone","input",e=>{state.orderInfo.phone=e.target.value;});
+  on("#oNote","input",e=>{state.orderInfo.note=e.target.value;});
+  on("#confirmOrder","click",()=>placeOrder());
+  on("#closeSuccess","click",()=>{state.modal=null;render();});
+  on("#pedidoSearch","input",e=>{state.pedidoSearch=e.target.value;render();});
+  on("#adminPass","input",e=>{state.adminPass=e.target.value;});
+  on("#adminPass","keydown",e=>{if(e.key==="Enter")document.getElementById("adminLogin")?.click();});
+  on("#togglePass","click",()=>{state.showPassText=!state.showPassText;render();setTimeout(()=>{const el=document.getElementById("adminPass");if(el){el.focus();el.setSelectionRange(el.value.length,el.value.length);}},0);});
+  on("#adminLogin","click",async()=>{
+    const h=await hashPass(state.adminPass);
+    if(h===OWNER_HASH){state.adminAuthed=true;state.adminPassErr="";}
+    else state.adminPassErr="Contraseña incorrecta.";
+    render();
+  });
+  onAll("[data-admin-sub]","click",e=>{state.adminSubTab=e.target.dataset.adminSub;render();});
+  on("#openAdd","click",()=>{state.editProd=null;state.form={name:"",category:"Abarrotes",price:"",stock:"",unit:"pza",img:"📦"};state.showForm=true;render();});
+  onAll("[data-editid]","click",e=>{const p=state.products.find(x=>x.id===Number(e.target.dataset.editid));if(!p)return;state.editProd=p;state.form={name:p.name,category:p.category,price:String(p.price),stock:String(p.stock),unit:p.unit,img:p.img};state.showForm=true;render();});
+  onAll("[data-delid]","click",e=>deleteProduct(Number(e.target.dataset.delid)));
+  on("#invSearch","input",e=>{state.searchInv=e.target.value;render();});
+  onAll("[data-catfilter]","click",e=>{state.catFilter=e.target.dataset.catfilter;render();});
+  onAll("[data-setstatus]","click",e=>{setOrderStatus(Number(e.target.dataset.setstatus),e.target.dataset.newstatus);});
+  on("#fName","input",e=>{state.form.name=e.target.value;});
+  on("#fPrice","input",e=>{state.form.price=e.target.value;});
+  on("#fStock","input",e=>{state.form.stock=e.target.value;});
+  on("#fUnit","change",e=>{state.form.unit=e.target.value;});
+  on("#fCat","change",e=>{state.form.category=e.target.value;});
+  onAll("[data-emoji]","click",e=>{state.form.img=e.target.dataset.emoji;render();});
+  on("#saveProd","click",()=>saveProduct());
+}
+
+render();
+</script>
+</body>
+</html>
